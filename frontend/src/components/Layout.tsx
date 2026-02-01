@@ -7,7 +7,9 @@ import {
   BookOpen,
   LogOut,
   Menu,
-  X
+  X,
+  Calendar,
+  BarChart2
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -15,6 +17,8 @@ const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/students', label: 'Students', icon: Users },
   { path: '/attendance', label: 'Attendance', icon: ClipboardCheck },
+  { path: '/timetable', label: 'Timetable', icon: Calendar },
+  { path: '/reports', label: 'Reports', icon: BarChart2 },
   { path: '/courses', label: 'Courses', icon: BookOpen },
 ];
 

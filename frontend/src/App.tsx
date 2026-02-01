@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard';
 import Students from './pages/Students';
 import Attendance from './pages/Attendance';
 import Courses from './pages/Courses';
+import Timetable from './pages/Timetable';
+import Reports from './pages/Reports';
 import Layout from './components/Layout';
 
 const queryClient = new QueryClient();
@@ -36,6 +38,8 @@ function App() {
               <Route path="students" element={<Students />} />
               <Route path="attendance" element={<Attendance />} />
               <Route path="courses" element={<Courses />} />
+              <Route path="timetable" element={<Timetable />} />
+              <Route path="reports" element={<Reports />} />
             </Route>
           </Routes>
         </BrowserRouter>
