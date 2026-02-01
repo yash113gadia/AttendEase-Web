@@ -1,9 +1,8 @@
-# Backend
-backend/target/
-backend/*.log
+# Dependencies
+node_modules/
+frontend/node_modules/
 
 # Frontend
-frontend/node_modules/
 frontend/dist/
 
 # IDE
@@ -18,3 +17,9 @@ Thumbs.db
 # Env
 .env
 .env.local
+
+# Neon
+.neon
+.agents/
+.claude/
+.github/
