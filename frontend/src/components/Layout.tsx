@@ -105,10 +105,10 @@ export default function Layout() {
       </aside>
 
       {/* Main content */}
-      <div className="lg:pl-64">
+      <div className="min-h-screen lg:ml-64">
         {/* Top bar */}
         <header className="sticky top-0 z-30 bg-white border-b border-zinc-200">
-          <div className="flex items-center justify-between h-16 px-4 lg:px-8">
+          <div className="flex items-center justify-between h-16 px-6 lg:px-8">
             <div className="flex items-center gap-4">
               <button 
                 className="lg:hidden p-2 text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 rounded-lg"
@@ -135,8 +135,8 @@ export default function Layout() {
         </header>
 
         {/* Page content */}
-        <main className="p-4 lg:p-8">
-          <div className="max-w-6xl mx-auto animate-in">
+        <main className="p-6 lg:p-8">
+          <div className="max-w-7xl animate-in">
             <Outlet />
           </div>
         </main>

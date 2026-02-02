@@ -10,11 +10,16 @@
   box-sizing: border-box;
 }
 
+html, body, #root {
+  min-height: 100vh;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background-color: #fafafa;
   color: #18181b;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Minimal scrollbar */
@@ -47,8 +52,11 @@ body {
 }
 
 /* Custom focus */
-.focus-ring:focus {
+input:focus, select:focus, button:focus {
   outline: none;
-  ring: 2px solid rgb(var(--accent));
-  ring-offset: 2px;
+}
+
+/* Ensure content doesn't get cut off */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
 }
