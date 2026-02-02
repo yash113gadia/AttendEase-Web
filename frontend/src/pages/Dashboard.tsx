@@ -28,8 +28,8 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Link to="/students" className="bg-white rounded-xl p-5 border border-zinc-200 hover:border-zinc-300 transition-colors group">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Link to="/students" className="bg-white rounded-xl p-6 border border-zinc-200 shadow-sm hover:shadow transition-colors group">
           <div className="flex items-center justify-between mb-3">
             <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
               <Users className="w-5 h-5 text-blue-500" />
@@ -42,7 +42,7 @@ export default function Dashboard() {
           <p className="text-sm text-zinc-500 mt-0.5">Total Students</p>
         </Link>
 
-        <Link to="/courses" className="bg-white rounded-xl p-5 border border-zinc-200 hover:border-zinc-300 transition-colors group">
+        <Link to="/courses" className="bg-white rounded-xl p-6 border border-zinc-200 shadow-sm hover:shadow transition-colors group">
           <div className="flex items-center justify-between mb-3">
             <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-emerald-500" />
@@ -55,7 +55,7 @@ export default function Dashboard() {
           <p className="text-sm text-zinc-500 mt-0.5">Active Courses</p>
         </Link>
 
-        <Link to="/attendance" className="bg-white rounded-xl p-5 border border-zinc-200 hover:border-zinc-300 transition-colors group">
+        <Link to="/attendance" className="bg-white rounded-xl p-6 border border-zinc-200 shadow-sm hover:shadow transition-colors group">
           <div className="flex items-center justify-between mb-3">
             <div className="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center">
               <ClipboardCheck className="w-5 h-5 text-amber-500" />
@@ -68,7 +68,7 @@ export default function Dashboard() {
           <p className="text-sm text-zinc-500 mt-0.5">Today's Attendance</p>
         </Link>
 
-        <Link to="/reports" className="bg-white rounded-xl p-5 border border-zinc-200 hover:border-zinc-300 transition-colors group">
+        <Link to="/reports" className="bg-white rounded-xl p-6 border border-zinc-200 shadow-sm hover:shadow transition-colors group">
           <div className="flex items-center justify-between mb-3">
             <div className={`w-10 h-10 ${stats?.lowAttendanceCount ? 'bg-red-50' : 'bg-zinc-50'} rounded-lg flex items-center justify-center`}>
               <TrendingDown className={`w-5 h-5 ${stats?.lowAttendanceCount ? 'text-red-500' : 'text-zinc-400'}`} />
@@ -83,9 +83,9 @@ export default function Dashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-xl border border-zinc-200 p-6">
+      <div className="bg-white rounded-xl border border-zinc-200 p-7">
         <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Link to="/attendance" className="flex items-center gap-3 p-4 rounded-lg border border-zinc-200 hover:bg-zinc-50 transition-colors">
             <ClipboardCheck className="w-5 h-5 text-blue-500" />
             <span className="text-sm font-medium text-zinc-700">Mark Attendance</span>
@@ -106,8 +106,8 @@ export default function Dashboard() {
       </div>
 
       {/* Today's Summary */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-zinc-200 p-6">
+      <div className="grid md:grid-cols-2 gap-8">
+        <div className="bg-white rounded-xl border border-zinc-200 p-7">
           <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-4">Today's Attendance</h2>
           {stats?.todayAttendance?.total ? (
             <div className="space-y-4">
@@ -151,7 +151,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        <div className="bg-white rounded-xl border border-zinc-200 p-6">
+        <div className="bg-white rounded-xl border border-zinc-200 p-7">
           <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-4">Overview</h2>
           <div className="space-y-4">
             <div className="flex items-center gap-4 p-4 bg-zinc-50 rounded-lg">

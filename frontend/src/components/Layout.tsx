@@ -39,7 +39,7 @@ export default function Layout() {
 
       {/* Sidebar */}
       <aside className={`
-        fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-zinc-200 transform transition-transform duration-200
+        fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-zinc-200 shadow-sm transform transition-transform duration-200
         lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         {/* Logo */}
@@ -59,7 +59,7 @@ export default function Layout() {
         </div>
 
         {/* Navigation */}
-        <nav className="p-3 space-y-1">
+        <nav className="p-4 space-y-1.5">
           {navItems.map(({ path, label, icon: Icon }) => {
             const isActive = location.pathname === path;
             return (
@@ -67,7 +67,7 @@ export default function Layout() {
                 key={path}
                 to={path}
                 className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
+                  flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors
                   ${isActive 
                     ? 'bg-blue-50 text-blue-600' 
                     : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'}
@@ -108,7 +108,7 @@ export default function Layout() {
       <div className="min-h-screen lg:ml-64">
         {/* Top bar */}
         <header className="sticky top-0 z-30 bg-white border-b border-zinc-200">
-          <div className="flex items-center justify-between h-16 px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 px-6 lg:px-10">
             <div className="flex items-center gap-4">
               <button 
                 className="lg:hidden p-2 text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 rounded-lg"
@@ -135,8 +135,8 @@ export default function Layout() {
         </header>
 
         {/* Page content */}
-        <main className="p-6 lg:p-8">
-          <div className="max-w-7xl animate-in">
+        <main className="p-6 lg:p-10">
+          <div className="max-w-7xl mx-auto animate-in">
             <Outlet />
           </div>
         </main>
