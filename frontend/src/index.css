@@ -60,3 +60,12 @@ input:focus, select:focus, button:focus {
 .overflow-x-auto {
   -webkit-overflow-scrolling: touch;
 }
+
+/* Hide scrollbars in horizontal button strip */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
