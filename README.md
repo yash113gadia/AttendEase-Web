@@ -1,53 +1,108 @@
-# AttendEase Web
+<div align="center">
+  <img src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Vite-5.0-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Neon-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
+</div>
 
-A modern web-based attendance management system built with Spring Boot and React.
+# 📚 AttendEase Web
 
-## Project Structure
+> A modern, full-stack attendance management system for educational institutions
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Status-Live-success?style=flat-square" alt="Status" />
+  <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="License" />
+</div>
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 📊 **Dashboard** | Real-time attendance statistics and analytics |
+| 👥 **Student Management** | Add, edit, and manage student records |
+| 📅 **Course Management** | Create and organize courses with sessions |
+| ✅ **Attendance Tracking** | Mark and track attendance with ease |
+| 🔐 **Authentication** | Secure JWT-based login system |
+| 📱 **Responsive Design** | Works seamlessly on desktop and mobile |
+
+---
+
+## 🖼️ Screenshots
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><strong>Dashboard</strong></td>
+      <td align="center"><strong>Login</strong></td>
+    </tr>
+    <tr>
+      <td><img src="docs/dashboard.png" width="400" alt="Dashboard"/></td>
+      <td><img src="docs/login.png" width="400" alt="Login"/></td>
+    </tr>
+  </table>
+</div>
+
+---
+
+## 🛠️ Tech Stack
+
+<table>
+<tr>
+<td>
+
+### Frontend
+- ⚛️ **React 18** with Hooks
+- 📘 **TypeScript** for type safety
+- ⚡ **Vite** for blazing fast builds
+- 🎨 **TailwindCSS** for styling
+- 🔄 **React Router** for navigation
+- 📡 **Axios** for API calls
+- 💎 **Lucide React** icons
+
+</td>
+<td>
+
+### Backend
+- 🟢 **Node.js** serverless functions
+- 🐘 **PostgreSQL** (Neon) database
+- 🔑 **JWT** authentication
+- ☁️ **Vercel** deployment
+
+</td>
+</tr>
+</table>
+
+---
+
+## 📁 Project Structure
 
 ```
 AttendEase-Web/
-├── backend/          # Spring Boot REST API
-│   ├── src/
-│   │   └── main/
-│   │       ├── java/com/attendease/
-│   │       │   ├── controller/     # REST Controllers
-│   │       │   ├── model/          # JPA Entities
-│   │       │   ├── repository/     # Spring Data Repositories
-│   │       │   ├── service/        # Business Logic
-│   │       │   ├── security/       # JWT Authentication
-│   │       │   ├── config/         # Spring Configuration
-│   │       │   └── dto/            # Data Transfer Objects
-│   │       └── resources/
-│   │           └── application.properties
-│   └── pom.xml
+├── 📂 api/               # Serverless API functions
+│   ├── auth.js           # Authentication endpoints
+│   ├── students.js       # Student CRUD operations
+│   ├── courses.js        # Course management
+│   ├── attendance.js     # Attendance tracking
+│   └── dashboard.js      # Dashboard statistics
 │
-└── frontend/         # React + TypeScript + Vite
-    ├── src/
-    │   ├── components/    # Reusable UI Components
-    │   ├── pages/         # Page Components
-    │   ├── context/       # React Context (Auth)
-    │   └── services/      # API Service
-    └── package.json
+├── 📂 frontend/          # React application
+│   ├── src/
+│   │   ├── components/   # Reusable UI components
+│   │   ├── pages/        # Page components
+│   │   ├── context/      # React Context (Auth)
+│   │   └── services/     # API service layer
+│   └── package.json
+│
+└── vercel.json           # Vercel configuration
 ```
 
-## Tech Stack
+---
 
-### Backend
-- **Java 17** + **Spring Boot 3.2**
-- **Spring Security** with JWT Authentication
-- **Spring Data JPA** with PostgreSQL
-- **Lombok** for boilerplate reduction
-
-### Frontend
-- **React 18** + **TypeScript**
-- **Vite** for fast development
-- **TailwindCSS** for styling
-- **React Query** for data fetching
-- **React Router** for navigation
-- **Axios** for API calls
-- **Lucide React** for icons
-
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 - Java 17+
