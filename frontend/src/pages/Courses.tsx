@@ -10,15 +10,6 @@ interface Course {
   student_count: number;
 }
 
-const courseColors = [
-  'from-indigo-500 to-indigo-600',
-  'from-emerald-500 to-emerald-600',
-  'from-amber-500 to-amber-600',
-  'from-rose-500 to-rose-600',
-  'from-purple-500 to-purple-600',
-  'from-cyan-500 to-cyan-600',
-];
-
 export default function Courses() {
   const { data: courses, isLoading } = useQuery<Course[]>({
     queryKey: ['courses'],
@@ -29,59 +20,45 @@ export default function Courses() {
   });
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center gap-4">
-        <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl flex items-center justify-center shadow-lg shadow-rose-500/30">
-          <BookOpen className="w-7 h-7 text-white" />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Courses</h1>
-          <p className="text-gray-500">View all available courses</p>
-        </div>
-      </div>
-
+    <div className="space-y-6">
       {/* Courses Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {isLoading ? (
           [...Array(6)].map((_, i) => (
-            <div key={i} className="bg-white rounded-2xl p-8 shadow-sm animate-pulse">
-              <div className="w-14 h-14 bg-gray-200 rounded-xl mb-5\" />
-              <div className="h-5 bg-gray-200 rounded w-3/4 mb-3" />
-              <div className="h-4 bg-gray-100 rounded w-1/2" />
+            <div key={i} className="bg-white rounded-xl border border-zinc-200 p-5 animate-pulse">
+              <div className="w-10 h-10 bg-zinc-100 rounded-lg mb-4" />
+              <div className="h-4 bg-zinc-100 rounded w-3/4 mb-2" />
+              <div className="h-3 bg-zinc-50 rounded w-1/2" />
             </div>
           ))
         ) : courses?.length === 0 ? (
-          <div className="col-span-full text-center py-20">
-            <div className="w-20 h-20 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-5">
-              <GraduationCap className="w-10 h-10 text-gray-400" />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No Courses Found</h3>
-            <p className="text-gray-500">Courses will appear here once added.</p>
+          <div className="col-span-full bg-white rounded-xl border border-zinc-200 py-16 text-center">
+            <GraduationCap className="w-10 h-10 text-zinc-300 mx-auto mb-3" />
+            <p className="font-medium text-zinc-900">No courses found</p>
+            <p className="text-sm text-zinc-500 mt-1">Courses will appear here once added</p>
           </div>
         ) : (
-          courses?.map((course, idx) => (
+          courses?.map((course) => (
             <div 
               key={course.id} 
-              className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 card-hover group"
+              className="bg-white rounded-xl border border-zinc-200 p-5 hover:border-zinc-300 transition-colors"
             >
-              <div className="flex items-start justify-between mb-4">
-                <div className={`w-14 h-14 bg-gradient-to-br ${courseColors[idx % courseColors.length]} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
-                  <BookOpen className="w-7 h-7 text-white" />
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                  <BookOpen className="w-5 h-5 text-blue-500" />
                 </div>
-                <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium">
+                <span className="text-xs font-medium text-zinc-500 bg-zinc-100 px-2 py-1 rounded">
                   {course.code}
                 </span>
               </div>
-              <h3 className="font-bold text-gray-900 text-lg mb-2 group-hover:text-indigo-600 transition-colors">
-                {course.name}
-              </h3>
-              <p className="text-sm text-gray-500 mb-4 line-clamp-2">
+              <h3 className="font-medium text-zinc-900 mb-1">{course.name}</h3>
+              <p className="text-sm text-zinc-500 line-clamp-2 mb-4">
                 {course.description || 'No description available'}
               </p>
-              <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
-                  <Users className="w-4 h-4" />
-                  <span className="text-sm font-medium">{course.student_count || 0} Students</span>
+              <div className="pt-3 border-t border-zinc-100">
+                <div className="flex items-center gap-1.5 text-sm text-zinc-600">
+                  <Users className="w-4 h-4 text-zinc-400" />
+                  <span>{course.student_count || 0} students</span>
                 </div>
               </div>
             </div>

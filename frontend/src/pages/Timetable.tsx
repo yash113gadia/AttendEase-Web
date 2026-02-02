@@ -59,100 +59,77 @@ export default function Timetable() {
     ) || [];
   };
 
-  const getSessionColor = (index: number) => {
-    const colors = [
-      'bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200 text-indigo-700',
-      'bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200 text-emerald-700',
-      'bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200 text-amber-700',
-      'bg-gradient-to-br from-rose-50 to-rose-100 border-rose-200 text-rose-700',
-      'bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200 text-purple-700',
-      'bg-gradient-to-br from-cyan-50 to-cyan-100 border-cyan-200 text-cyan-700',
-    ];
-    return colors[index % colors.length];
-  };
-
   const groupedByDay = DAYS.reduce((acc, day) => {
     acc[day] = sessions?.filter(s => s.day_of_week === day) || [];
     return acc;
   }, {} as Record<string, Session[]>);
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
-            <Calendar className="w-7 h-7 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Timetable</h1>
-            <p className="text-gray-500">Weekly class schedule</p>
-          </div>
-        </div>
-        <div className="flex gap-3">
-          <select
-            value={selectedCourse || ''}
-            onChange={(e) => setSelectedCourse(Number(e.target.value) || null)}
-            className="px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:bg-white outline-none transition font-medium"
+    <div className="space-y-6">
+      {/* Controls */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <select
+          value={selectedCourse || ''}
+          onChange={(e) => setSelectedCourse(Number(e.target.value) || null)}
+          className="px-3 py-2 bg-white border border-zinc-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm"
+        >
+          <option value="">All Courses</option>
+          {courses?.map(course => (
+            <option key={course.id} value={course.id}>{course.name} ({course.code})</option>
+          ))}
+        </select>
+        <div className="flex rounded-lg border border-zinc-200 overflow-hidden">
+          <button
+            onClick={() => setViewMode('grid')}
+            className={`px-3 py-2 text-sm flex items-center gap-1.5 transition ${viewMode === 'grid' ? 'bg-blue-500 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-50'}`}
           >
-            <option value="">All Courses</option>
-            {courses?.map(course => (
-              <option key={course.id} value={course.id}>{course.name} ({course.code})</option>
-            ))}
-          </select>
-          <div className="flex rounded-xl border border-gray-200 overflow-hidden bg-white shadow-sm">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`px-4 py-2.5 text-sm font-semibold flex items-center gap-2 transition ${viewMode === 'grid' ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
-            >
-              <LayoutGrid className="w-4 h-4" />
-              Grid
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={`px-4 py-2.5 text-sm font-semibold flex items-center gap-2 transition ${viewMode === 'list' ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
-            >
-              <List className="w-4 h-4" />
-              List
-            </button>
-          </div>
+            <LayoutGrid className="w-4 h-4" />
+            Grid
+          </button>
+          <button
+            onClick={() => setViewMode('list')}
+            className={`px-3 py-2 text-sm flex items-center gap-1.5 transition ${viewMode === 'list' ? 'bg-blue-500 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-50'}`}
+          >
+            <List className="w-4 h-4" />
+            List
+          </button>
         </div>
       </div>
 
       {isLoading ? (
-        <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-100 text-center">
-          <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-500 font-medium">Loading timetable...</p>
+        <div className="bg-white rounded-xl border border-zinc-200 p-12 text-center">
+          <div className="w-8 h-8 border-2 border-zinc-200 border-t-blue-500 rounded-full animate-spin mx-auto" />
         </div>
       ) : viewMode === 'grid' ? (
         /* Grid View */
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[800px]">
               <thead>
-                <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b">
-                  <th className="w-20 px-4 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Time</th>
+                <tr className="bg-zinc-50 border-b border-zinc-200">
+                  <th className="w-20 px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">Time</th>
                   {DAYS.map(day => (
-                    <th key={day} className="px-4 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    <th key={day} className="px-3 py-3 text-center text-xs font-medium text-zinc-500 uppercase">
                       {DAY_NAMES[day]}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-zinc-100">
                 {TIME_SLOTS.map(time => (
-                  <tr key={time} className="hover:bg-gray-50/50 transition">
-                    <td className="px-4 py-4 text-sm font-semibold text-gray-500 border-r border-gray-100">{time}</td>
+                  <tr key={time} className="hover:bg-zinc-50/50">
+                    <td className="px-4 py-3 text-sm text-zinc-500 border-r border-zinc-100">{time}</td>
                     {DAYS.map(day => {
                       const daySlotSessions = getSessionsForSlot(day, time);
                       return (
-                        <td key={`${day}-${time}`} className="px-2 py-2 border-r border-gray-100 last:border-r-0">
+                        <td key={`${day}-${time}`} className="px-2 py-2 border-r border-zinc-100 last:border-r-0">
                           {daySlotSessions.map((session) => (
                             <div
                               key={session.id}
-                              className={`p-2.5 rounded-xl border text-xs shadow-sm ${getSessionColor(session.id)}`}
+                              className="p-2 rounded-lg bg-blue-50 border border-blue-100 text-xs"
                             >
-                              <div className="font-bold truncate">{session.subject_code}</div>
-                              <div className="truncate opacity-75 mt-0.5">{session.teacher_name}</div>
+                              <div className="font-medium text-blue-700">{session.subject_code}</div>
+                              <div className="text-blue-500 mt-0.5">{session.teacher_name}</div>
                             </div>
                           ))}
                         </td>
@@ -168,42 +145,40 @@ export default function Timetable() {
         /* List View */
         <div className="space-y-4">
           {DAYS.map(day => (
-            <div key={day} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden card-hover">
-              <div className="px-6 py-4 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-b">
-                <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-indigo-500" />
+            <div key={day} className="bg-white rounded-xl border border-zinc-200 overflow-hidden">
+              <div className="px-5 py-3 bg-zinc-50 border-b border-zinc-100">
+                <h3 className="text-sm font-medium text-zinc-900 flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-zinc-400" />
                   {DAY_NAMES[day]}
                 </h3>
               </div>
               {groupedByDay[day].length === 0 ? (
-                <div className="px-6 py-8 text-center">
-                  <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                    <BookOpen className="w-6 h-6 text-gray-400" />
-                  </div>
-                  <p className="text-gray-500 font-medium">No classes scheduled</p>
+                <div className="px-5 py-8 text-center">
+                  <BookOpen className="w-6 h-6 text-zinc-300 mx-auto mb-2" />
+                  <p className="text-sm text-zinc-500">No classes</p>
                 </div>
               ) : (
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-zinc-100">
                   {groupedByDay[day].map((session) => (
-                    <div key={session.id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50/50 transition">
-                      <div className="flex items-center gap-4">
-                        <div className={`w-14 h-14 rounded-xl flex items-center justify-center border shadow-sm ${getSessionColor(session.id)}`}>
-                          <BookOpen className="w-7 h-7" />
+                    <div key={session.id} className="px-5 py-3 flex items-center justify-between hover:bg-zinc-50">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center">
+                          <BookOpen className="w-4 h-4 text-blue-500" />
                         </div>
                         <div>
-                          <p className="font-semibold text-gray-900">{session.subject_name}</p>
-                          <p className="text-sm text-gray-500 font-medium">{session.subject_code}</p>
+                          <p className="text-sm font-medium text-zinc-900">{session.subject_name}</p>
+                          <p className="text-xs text-zinc-500">{session.subject_code}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-6 text-sm font-medium">
-                        <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-3 py-1.5 rounded-lg">
-                          <Clock className="w-4 h-4 text-indigo-500" />
+                      <div className="flex items-center gap-4 text-xs text-zinc-500">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5" />
                           {session.start_time} - {session.end_time}
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-600 bg-gray-50 px-3 py-1.5 rounded-lg">
-                          <User className="w-4 h-4 text-indigo-500" />
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <User className="w-3.5 h-3.5" />
                           {session.teacher_name}
-                        </div>
+                        </span>
                       </div>
                     </div>
                   ))}
@@ -216,18 +191,15 @@ export default function Timetable() {
 
       {/* Legend */}
       {sessions && sessions.length > 0 && (
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-          <h4 className="font-bold text-gray-700 mb-4 flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-indigo-500" />
-            Subjects
-          </h4>
-          <div className="flex flex-wrap gap-3">
-            {Array.from(new Set(sessions.map(s => s.subject_code))).map((code, idx) => {
+        <div className="bg-white rounded-xl border border-zinc-200 p-4">
+          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wide mb-3">Subjects</p>
+          <div className="flex flex-wrap gap-2">
+            {Array.from(new Set(sessions.map(s => s.subject_code))).map((code) => {
               const session = sessions.find(s => s.subject_code === code);
               return (
                 <span
                   key={code}
-                  className={`px-4 py-2 rounded-xl text-sm font-semibold border shadow-sm ${getSessionColor(session?.id || idx)}`}
+                  className="px-3 py-1.5 bg-zinc-50 border border-zinc-200 rounded-lg text-xs font-medium text-zinc-700"
                 >
                   {code}: {session?.subject_name}
                 </span>

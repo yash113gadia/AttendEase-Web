@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../services/api';
 import { useState } from 'react';
-import { AlertTriangle, Download, TrendingDown, TrendingUp, BarChart2, FileBarChart, Users, Calendar } from 'lucide-react';
+import { AlertTriangle, Download, TrendingUp, Calendar } from 'lucide-react';
 
 interface LowAttendanceStudent {
   id: number;
@@ -73,12 +73,6 @@ export default function Reports() {
     URL.revokeObjectURL(url);
   };
 
-  const getAttendanceColor = (percentage: number) => {
-    if (percentage >= 75) return 'text-emerald-700 bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200';
-    if (percentage >= 50) return 'text-amber-700 bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200';
-    return 'text-red-700 bg-gradient-to-r from-red-50 to-red-100 border border-red-200';
-  };
-
   const overallStats = summary?.reduce((acc, day) => ({
     present: acc.present + parseInt(String(day.present)),
     absent: acc.absent + parseInt(String(day.absent)),
@@ -90,64 +84,176 @@ export default function Reports() {
     : 0;
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center gap-4">
-        <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
-          <FileBarChart className="w-7 h-7 text-white" />
+    <div className="space-y-6">
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white rounded-xl border border-zinc-200 p-5">
+          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wide">Overall Rate</p>
+          <p className="text-2xl font-semibold text-zinc-900 mt-1">{overallPercentage}%</p>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
-          <p className="text-gray-500">Attendance analytics and insights</p>
+        <div className="bg-white rounded-xl border border-zinc-200 p-5">
+          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wide">Present</p>
+          <p className="text-2xl font-semibold text-emerald-600 mt-1">{overallStats?.present || 0}</p>
+        </div>
+        <div className="bg-white rounded-xl border border-zinc-200 p-5">
+          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wide">Absent</p>
+          <p className="text-2xl font-semibold text-red-600 mt-1">{overallStats?.absent || 0}</p>
+        </div>
+        <div className="bg-white rounded-xl border border-zinc-200 p-5">
+          <p className="text-xs font-medium text-zinc-500 uppercase tracking-wide">Low Attendance</p>
+          <p className="text-2xl font-semibold text-amber-600 mt-1">{lowAttendance?.length || 0}</p>
         </div>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 card-hover">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Overall Attendance</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">{overallPercentage}%</p>
+      {/* Daily Trend */}
+      <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden">
+        <div className="p-5 border-b border-zinc-100 flex items-center justify-between">
+          <p className="font-medium text-zinc-900">Daily Trend</p>
+          <select
+            value={selectedCourse}
+            onChange={(e) => setSelectedCourse(e.target.value)}
+            className="px-3 py-1.5 bg-white border border-zinc-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          >
+            <option value="">All Courses</option>
+            {courses?.map(course => (
+              <option key={course.id} value={course.id}>{course.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="p-5">
+          {loadingSummary ? (
+            <div className="text-center py-8">
+              <div className="w-8 h-8 border-2 border-zinc-200 border-t-blue-500 rounded-full animate-spin mx-auto" />
             </div>
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg ${
-              overallPercentage >= 75 
-                ? 'bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-emerald-500/30' 
-                : 'bg-gradient-to-br from-red-500 to-red-600 shadow-red-500/30'
-            }`}>
-              {overallPercentage >= 75 ? <TrendingUp className="w-7 h-7 text-white" /> : <TrendingDown className="w-7 h-7 text-white" />}
+          ) : summary?.length === 0 ? (
+            <div className="text-center py-8">
+              <Calendar className="w-8 h-8 text-zinc-300 mx-auto mb-2" />
+              <p className="text-sm text-zinc-500">No data yet</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {summary?.slice(0, 10).map((day) => {
+                const percentage = day.total ? Math.round((parseInt(String(day.present)) / parseInt(String(day.total))) * 100) : 0;
+                return (
+                  <div key={day.date} className="flex items-center gap-3">
+                    <div className="w-20 text-xs text-zinc-500">
+                      {new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </div>
+                    <div className="flex-1 h-7 bg-zinc-100 rounded-lg overflow-hidden relative">
+                      <div
+                        className={`h-full rounded-lg transition-all ${
+                          percentage >= 75 ? 'bg-emerald-400' : percentage >= 50 ? 'bg-amber-400' : 'bg-red-400'
+                        }`}
+                        style={{ width: `${percentage}%` }}
+                      />
+                      <span className="absolute inset-0 flex items-center justify-center text-xs font-medium text-zinc-700">
+                        {day.present}/{day.total} ({percentage}%)
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Low Attendance Report */}
+      <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden">
+        <div className="p-5 border-b border-zinc-100 flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-amber-50 rounded-lg flex items-center justify-center">
+              <AlertTriangle className="w-5 h-5 text-amber-500" />
+            </div>
+            <div>
+              <p className="font-medium text-zinc-900">Low Attendance</p>
+              <p className="text-xs text-zinc-500">Below {threshold}%</p>
             </div>
           </div>
-        </div>
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 card-hover">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Total Present</p>
-              <p className="text-3xl font-bold text-emerald-600 mt-1">{overallStats?.present || 0}</p>
-            </div>
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
-              <Users className="w-7 h-7 text-white" />
-            </div>
+          <div className="flex items-center gap-2">
+            <select
+              value={threshold}
+              onChange={(e) => setThreshold(Number(e.target.value))}
+              className="px-3 py-1.5 bg-white border border-zinc-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            >
+              <option value={50}>50%</option>
+              <option value={60}>60%</option>
+              <option value={75}>75%</option>
+              <option value={80}>80%</option>
+            </select>
+            <button
+              onClick={exportLowAttendanceCSV}
+              disabled={!lowAttendance?.length}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Download className="w-4 h-4" />
+              Export
+            </button>
           </div>
         </div>
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 card-hover">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Total Absent</p>
-              <p className="text-3xl font-bold text-red-600 mt-1">{overallStats?.absent || 0}</p>
-            </div>
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center shadow-lg shadow-red-500/30">
-              <Users className="w-7 h-7 text-white" />
-            </div>
-          </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-zinc-50 border-b border-zinc-100">
+              <tr>
+                <th className="text-left px-5 py-3 text-xs font-medium text-zinc-500 uppercase">Roll No.</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-zinc-500 uppercase">Name</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-zinc-500 uppercase">Course</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-zinc-500 uppercase">Classes</th>
+                <th className="text-left px-5 py-3 text-xs font-medium text-zinc-500 uppercase">Rate</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-100">
+              {loadingLow ? (
+                <tr>
+                  <td colSpan={5} className="px-5 py-8 text-center">
+                    <div className="w-8 h-8 border-2 border-zinc-200 border-t-blue-500 rounded-full animate-spin mx-auto" />
+                  </td>
+                </tr>
+              ) : lowAttendance?.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-5 py-8 text-center">
+                    <TrendingUp className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+                    <p className="text-sm text-zinc-500">No students below {threshold}%</p>
+                  </td>
+                </tr>
+              ) : (
+                lowAttendance?.map((student) => (
+                  <tr key={student.id} className="hover:bg-zinc-50">
+                    <td className="px-5 py-3 text-sm text-zinc-600">{student.roll_number}</td>
+                    <td className="px-5 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-600 text-xs font-medium">
+                          {student.name.charAt(0)}
+                        </div>
+                        <span className="text-sm font-medium text-zinc-900">{student.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-5 py-3 text-sm text-zinc-600">{student.course_name || '-'}</td>
+                    <td className="px-5 py-3 text-sm text-zinc-600">
+                      {student.present_count}/{student.total_classes}
+                    </td>
+                    <td className="px-5 py-3">
+                      <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${
+                        student.percentage >= 75 
+                          ? 'bg-emerald-50 text-emerald-700' 
+                          : student.percentage >= 50 
+                            ? 'bg-amber-50 text-amber-700' 
+                            : 'bg-red-50 text-red-700'
+                      }`}>
+                        {student.percentage}%
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 card-hover">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-500">Low Attendance</p>
-              <p className="text-3xl font-bold text-amber-600 mt-1">{lowAttendance?.length || 0}</p>
-            </div>
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
-              <AlertTriangle className="w-7 h-7 text-white" />
+      </div>
+    </div>
+  );
+}
             </div>
           </div>
         </div>
