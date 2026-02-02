@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { Loader2, Eye, EyeOff, ClipboardCheck } from 'lucide-react';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -28,124 +28,237 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex">
-      {/* Left side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-zinc-900 text-white p-12 flex-col justify-between">
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-              </svg>
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#1e3a5f',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      {/* Header */}
+      <header style={{
+        padding: '16px 24px',
+        borderBottom: '1px solid rgba(255,255,255,0.1)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{
+            width: '32px',
+            height: '32px',
+            backgroundColor: '#3b82f6',
+            borderRadius: '6px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <ClipboardCheck size={18} color="white" />
+          </div>
+          <span style={{ color: 'white', fontWeight: 600, fontSize: '18px' }}>AttendEase</span>
+        </div>
+      </header>
+
+      {/* Main */}
+      <main style={{
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '24px'
+      }}>
+        <div style={{
+          width: '100%',
+          maxWidth: '400px',
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          overflow: 'hidden',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+        }}>
+          {/* Card Header */}
+          <div style={{
+            padding: '24px',
+            borderBottom: '1px solid #e2e8f0',
+            backgroundColor: '#f8fafc'
+          }}>
+            <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#1e293b', marginBottom: '4px' }}>
+              Sign In
+            </h1>
+            <p style={{ fontSize: '14px', color: '#64748b' }}>
+              Enter your credentials to access the system
+            </p>
+          </div>
+
+          {/* Card Body */}
+          <div style={{ padding: '24px' }}>
+            <form onSubmit={handleSubmit}>
+              {error && (
+                <div style={{
+                  padding: '12px 16px',
+                  backgroundColor: '#fee2e2',
+                  border: '1px solid #fecaca',
+                  borderRadius: '6px',
+                  color: '#dc2626',
+                  fontSize: '14px',
+                  marginBottom: '16px'
+                }}>
+                  {error}
+                </div>
+              )}
+
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: '#374151',
+                  marginBottom: '6px'
+                }}>
+                  Username
+                </label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter username"
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    fontSize: '14px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                  onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                />
+              </div>
+
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: '#374151',
+                  marginBottom: '6px'
+                }}>
+                  Password
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter password"
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '10px 40px 10px 12px',
+                      fontSize: '14px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '6px',
+                      outline: 'none',
+                      boxSizing: 'border-box'
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                    onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '10px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: '4px',
+                      color: '#6b7280'
+                    }}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  backgroundColor: '#3b82f6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  opacity: loading ? 0.7 : 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} />
+                    Signing in...
+                  </>
+                ) : (
+                  'Sign In'
+                )}
+              </button>
+            </form>
+          </div>
+
+          {/* Card Footer */}
+          <div style={{
+            padding: '16px 24px',
+            borderTop: '1px solid #e2e8f0',
+            backgroundColor: '#f8fafc',
+            textAlign: 'center'
+          }}>
+            <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>
+              Demo Credentials
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', fontSize: '13px' }}>
+              <code style={{
+                padding: '4px 8px',
+                backgroundColor: '#e2e8f0',
+                borderRadius: '4px',
+                color: '#334155'
+              }}>admin</code>
+              <span style={{ color: '#94a3b8' }}>/</span>
+              <code style={{
+                padding: '4px 8px',
+                backgroundColor: '#e2e8f0',
+                borderRadius: '4px',
+                color: '#334155'
+              }}>admin123</code>
             </div>
-            <span className="text-xl font-semibold">AttendEase</span>
           </div>
         </div>
-        
-        <div className="space-y-6">
-          <h1 className="text-4xl font-bold leading-tight">
-            Simple attendance<br />management for<br />modern institutions
-          </h1>
-          <p className="text-zinc-400 text-lg max-w-md">
-            Track attendance, manage students, and generate insights — all in one place.
-          </p>
-        </div>
+      </main>
 
-        <p className="text-zinc-500 text-sm">
+      {/* Footer */}
+      <footer style={{
+        padding: '16px',
+        textAlign: 'center',
+        borderTop: '1px solid rgba(255,255,255,0.1)'
+      }}>
+        <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>
           © 2026 AttendEase. All rights reserved.
         </p>
-      </div>
+      </footer>
 
-      {/* Right side - Login form */}
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-sm">
-          {/* Mobile logo */}
-          <div className="lg:hidden flex items-center gap-3 mb-12">
-            <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-              </svg>
-            </div>
-            <span className="text-xl font-semibold text-zinc-900">AttendEase</span>
-          </div>
-
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold text-zinc-900">Welcome back</h2>
-            <p className="text-zinc-500 mt-2">Enter your credentials to continue</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
-                {error}
-              </div>
-            )}
-
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-                Username
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-2.5 bg-white border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-zinc-900 placeholder:text-zinc-400"
-                placeholder="Enter username"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 pr-11 bg-white border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow text-zinc-900 placeholder:text-zinc-400"
-                  placeholder="Enter password"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                'Sign in'
-              )}
-            </button>
-          </form>
-
-          <div className="mt-8 pt-6 border-t border-zinc-200">
-            <p className="text-center text-zinc-500 text-sm mb-3">
-              Demo credentials
-            </p>
-            <div className="flex items-center justify-center gap-2 text-sm">
-              <code className="px-2 py-1 bg-zinc-100 rounded text-zinc-700">admin</code>
-              <span className="text-zinc-400">/</span>
-              <code className="px-2 py-1 bg-zinc-100 rounded text-zinc-700">admin123</code>
-            </div>
-          </div>
-        </div>
-      </div>
+      <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }

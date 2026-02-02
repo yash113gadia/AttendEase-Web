@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../services/api';
-import { Users, BookOpen, ClipboardCheck, TrendingDown, Calendar, BarChart2, ArrowUpRight } from 'lucide-react';
+import { Users, BookOpen, ClipboardCheck, TrendingDown, Calendar, BarChart2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface Stats {
@@ -11,6 +11,28 @@ interface Stats {
   avgAttendance: number;
   lowAttendanceStudents: Array<{ id: number; name: string; percentage: number }>;
 }
+
+const cardStyle: React.CSSProperties = {
+  backgroundColor: 'white',
+  borderRadius: '8px',
+  border: '1px solid #e2e8f0',
+  overflow: 'hidden'
+};
+
+const cardHeaderStyle: React.CSSProperties = {
+  padding: '12px 16px',
+  borderBottom: '1px solid #e2e8f0',
+  backgroundColor: '#f8fafc',
+  fontSize: '12px',
+  fontWeight: 600,
+  textTransform: 'uppercase',
+  letterSpacing: '0.5px',
+  color: '#64748b'
+};
+
+const cardBodyStyle: React.CSSProperties = {
+  padding: '16px'
+};
 
 export default function Dashboard() {
   const { data: stats, isLoading } = useQuery<Stats>({
@@ -25,163 +47,314 @@ export default function Dashboard() {
   const lowAttendanceCount = stats?.lowAttendanceStudents?.length || 0;
 
   return (
-    <div className="space-y-8">
+    <div>
+      {/* Page Title */}
+      <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#1e293b', marginBottom: '24px' }}>
+        Dashboard
+      </h1>
+
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Link to="/students" className="bg-white rounded-xl p-6 border border-zinc-200 shadow-sm hover:shadow transition-colors group">
-          <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
-              <Users className="w-5 h-5 text-blue-500" />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+        {/* Total Students */}
+        <div style={cardStyle}>
+          <div style={cardBodyStyle}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+              <div>
+                <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '4px' }}>Total Students</p>
+                <p style={{ fontSize: '28px', fontWeight: 700, color: '#1e293b' }}>
+                  {isLoading ? '...' : stats?.totalStudents || 0}
+                </p>
+              </div>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                backgroundColor: '#dbeafe',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                <Users size={20} color="#3b82f6" />
+              </div>
             </div>
-            <ArrowUpRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-400" />
           </div>
-          <p className="text-2xl font-semibold text-zinc-900">
-            {isLoading ? <span className="inline-block w-12 h-7 bg-zinc-100 rounded animate-pulse" /> : stats?.totalStudents || 0}
-          </p>
-          <p className="text-sm text-zinc-500 mt-0.5">Total Students</p>
-        </Link>
+        </div>
 
-        <Link to="/courses" className="bg-white rounded-xl p-6 border border-zinc-200 shadow-sm hover:shadow transition-colors group">
-          <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-emerald-500" />
+        {/* Active Courses */}
+        <div style={cardStyle}>
+          <div style={cardBodyStyle}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+              <div>
+                <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '4px' }}>Active Courses</p>
+                <p style={{ fontSize: '28px', fontWeight: 700, color: '#1e293b' }}>
+                  {isLoading ? '...' : stats?.totalCourses || 0}
+                </p>
+              </div>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                backgroundColor: '#dcfce7',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                <BookOpen size={20} color="#22c55e" />
+              </div>
             </div>
-            <ArrowUpRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-400" />
           </div>
-          <p className="text-2xl font-semibold text-zinc-900">
-            {isLoading ? <span className="inline-block w-12 h-7 bg-zinc-100 rounded animate-pulse" /> : stats?.totalCourses || 0}
-          </p>
-          <p className="text-sm text-zinc-500 mt-0.5">Active Courses</p>
-        </Link>
+        </div>
 
-        <Link to="/attendance" className="bg-white rounded-xl p-6 border border-zinc-200 shadow-sm hover:shadow transition-colors group">
-          <div className="flex items-center justify-between mb-3">
-            <div className="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center">
-              <ClipboardCheck className="w-5 h-5 text-amber-500" />
+        {/* Today's Attendance */}
+        <div style={cardStyle}>
+          <div style={cardBodyStyle}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+              <div>
+                <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '4px' }}>Today's Attendance</p>
+                <p style={{ fontSize: '28px', fontWeight: 700, color: '#1e293b' }}>
+                  {isLoading ? '...' : `${todayPercentage}%`}
+                </p>
+              </div>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                backgroundColor: todayPercentage >= 75 ? '#dcfce7' : '#fef3c7',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                <ClipboardCheck size={20} color={todayPercentage >= 75 ? '#22c55e' : '#f59e0b'} />
+              </div>
             </div>
-            <ArrowUpRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-400" />
           </div>
-          <p className="text-2xl font-semibold text-zinc-900">
-            {isLoading ? <span className="inline-block w-12 h-7 bg-zinc-100 rounded animate-pulse" /> : `${todayPercentage}%`}
-          </p>
-          <p className="text-sm text-zinc-500 mt-0.5">Today's Attendance</p>
-        </Link>
+        </div>
 
-        <Link to="/reports" className="bg-white rounded-xl p-6 border border-zinc-200 shadow-sm hover:shadow transition-colors group">
-          <div className="flex items-center justify-between mb-3">
-            <div className={`w-10 h-10 ${lowAttendanceCount ? 'bg-red-50' : 'bg-zinc-50'} rounded-lg flex items-center justify-center`}>
-              <TrendingDown className={`w-5 h-5 ${lowAttendanceCount ? 'text-red-500' : 'text-zinc-400'}`} />
+        {/* Low Attendance */}
+        <div style={cardStyle}>
+          <div style={cardBodyStyle}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+              <div>
+                <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '4px' }}>Low Attendance</p>
+                <p style={{ fontSize: '28px', fontWeight: 700, color: '#1e293b' }}>
+                  {isLoading ? '...' : lowAttendanceCount}
+                </p>
+              </div>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                backgroundColor: lowAttendanceCount > 0 ? '#fee2e2' : '#f1f5f9',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                <TrendingDown size={20} color={lowAttendanceCount > 0 ? '#ef4444' : '#94a3b8'} />
+              </div>
             </div>
-            <ArrowUpRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-400" />
           </div>
-          <p className="text-2xl font-semibold text-zinc-900">
-            {isLoading ? <span className="inline-block w-12 h-7 bg-zinc-100 rounded animate-pulse" /> : lowAttendanceCount}
-          </p>
-          <p className="text-sm text-zinc-500 mt-0.5">Low Attendance</p>
-        </Link>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="bg-white rounded-xl border border-zinc-200 p-7">
-        <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Link to="/attendance" className="flex items-center gap-3 p-4 rounded-lg border border-zinc-200 hover:bg-zinc-50 transition-colors">
-            <ClipboardCheck className="w-5 h-5 text-blue-500" />
-            <span className="text-sm font-medium text-zinc-700">Mark Attendance</span>
-          </Link>
-          <Link to="/students" className="flex items-center gap-3 p-4 rounded-lg border border-zinc-200 hover:bg-zinc-50 transition-colors">
-            <Users className="w-5 h-5 text-emerald-500" />
-            <span className="text-sm font-medium text-zinc-700">Manage Students</span>
-          </Link>
-          <Link to="/timetable" className="flex items-center gap-3 p-4 rounded-lg border border-zinc-200 hover:bg-zinc-50 transition-colors">
-            <Calendar className="w-5 h-5 text-amber-500" />
-            <span className="text-sm font-medium text-zinc-700">View Timetable</span>
-          </Link>
-          <Link to="/reports" className="flex items-center gap-3 p-4 rounded-lg border border-zinc-200 hover:bg-zinc-50 transition-colors">
-            <BarChart2 className="w-5 h-5 text-purple-500" />
-            <span className="text-sm font-medium text-zinc-700">View Reports</span>
-          </Link>
         </div>
       </div>
 
-      {/* Today's Summary */}
-      <div className="grid md:grid-cols-2 gap-8">
-        <div className="bg-white rounded-xl border border-zinc-200 p-7">
-          <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-4">Today's Attendance</h2>
-          {stats?.todayTotal ? (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between py-3 border-b border-zinc-100">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span className="text-sm text-zinc-600">Present</span>
-                </div>
-                <span className="font-semibold text-zinc-900">{stats.todayPresent}</span>
+      {/* Two Column Layout */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
+        {/* Quick Actions */}
+        <div style={cardStyle}>
+          <div style={cardHeaderStyle}>Quick Actions</div>
+          <div style={{ padding: '8px' }}>
+            <Link
+              to="/attendance"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '12px',
+                borderRadius: '6px',
+                textDecoration: 'none',
+                color: '#1e293b',
+                marginBottom: '4px'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+            >
+              <div style={{
+                width: '36px',
+                height: '36px',
+                backgroundColor: '#3b82f6',
+                borderRadius: '6px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                <ClipboardCheck size={18} color="white" />
               </div>
-              <div className="flex items-center justify-between py-3 border-b border-zinc-100">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-red-500" />
-                  <span className="text-sm text-zinc-600">Absent</span>
-                </div>
-                <span className="font-semibold text-zinc-900">{stats.todayTotal - stats.todayPresent}</span>
+              <div>
+                <p style={{ fontWeight: 500, fontSize: '14px' }}>Mark Attendance</p>
+                <p style={{ fontSize: '12px', color: '#64748b' }}>Record daily attendance</p>
               </div>
-              <div className="pt-2">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-zinc-600">Attendance Rate</span>
-                  <span className={`text-lg font-semibold ${todayPercentage >= 75 ? 'text-emerald-600' : 'text-red-600'}`}>
-                    {todayPercentage}%
-                  </span>
-                </div>
-                <div className="w-full bg-zinc-100 rounded-full h-2">
-                  <div 
-                    className={`h-2 rounded-full transition-all ${todayPercentage >= 75 ? 'bg-emerald-500' : 'bg-red-500'}`}
-                    style={{ width: `${todayPercentage}%` }}
-                  />
-                </div>
+            </Link>
+
+            <Link
+              to="/students"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '12px',
+                borderRadius: '6px',
+                textDecoration: 'none',
+                color: '#1e293b',
+                marginBottom: '4px'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+            >
+              <div style={{
+                width: '36px',
+                height: '36px',
+                backgroundColor: '#22c55e',
+                borderRadius: '6px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                <Users size={18} color="white" />
               </div>
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <ClipboardCheck className="w-10 h-10 text-zinc-300 mx-auto mb-3" />
-              <p className="text-sm text-zinc-500 mb-3">No attendance marked today</p>
-              <Link to="/attendance" className="text-sm text-blue-500 hover:text-blue-600 font-medium">
-                Mark attendance →
-              </Link>
-            </div>
-          )}
+              <div>
+                <p style={{ fontWeight: 500, fontSize: '14px' }}>Manage Students</p>
+                <p style={{ fontSize: '12px', color: '#64748b' }}>Add or edit students</p>
+              </div>
+            </Link>
+
+            <Link
+              to="/timetable"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '12px',
+                borderRadius: '6px',
+                textDecoration: 'none',
+                color: '#1e293b',
+                marginBottom: '4px'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+            >
+              <div style={{
+                width: '36px',
+                height: '36px',
+                backgroundColor: '#f59e0b',
+                borderRadius: '6px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                <Calendar size={18} color="white" />
+              </div>
+              <div>
+                <p style={{ fontWeight: 500, fontSize: '14px' }}>View Timetable</p>
+                <p style={{ fontSize: '12px', color: '#64748b' }}>Class schedules</p>
+              </div>
+            </Link>
+
+            <Link
+              to="/reports"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '12px',
+                borderRadius: '6px',
+                textDecoration: 'none',
+                color: '#1e293b'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+            >
+              <div style={{
+                width: '36px',
+                height: '36px',
+                backgroundColor: '#8b5cf6',
+                borderRadius: '6px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                <BarChart2 size={18} color="white" />
+              </div>
+              <div>
+                <p style={{ fontWeight: 500, fontSize: '14px' }}>Generate Reports</p>
+                <p style={{ fontSize: '12px', color: '#64748b' }}>Analytics & exports</p>
+              </div>
+            </Link>
+          </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-zinc-200 p-7">
-          <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-4">Overview</h2>
-          <div className="space-y-4">
-            <div className="flex items-center gap-4 p-4 bg-zinc-50 rounded-lg">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Users className="w-5 h-5 text-blue-600" />
-              </div>
+        {/* Today's Summary */}
+        <div style={cardStyle}>
+          <div style={cardHeaderStyle}>Today's Summary</div>
+          <div style={cardBodyStyle}>
+            {stats?.todayTotal ? (
               <div>
-                <p className="font-semibold text-zinc-900">{stats?.totalStudents || 0} Students</p>
-                <p className="text-xs text-zinc-500">Enrolled across all courses</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 p-4 bg-zinc-50 rounded-lg">
-              <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-emerald-600" />
-              </div>
-              <div>
-                <p className="font-semibold text-zinc-900">{stats?.totalCourses || 0} Courses</p>
-                <p className="text-xs text-zinc-500">Active programs</p>
-              </div>
-            </div>
-            {lowAttendanceCount > 0 && (
-              <Link to="/reports" className="flex items-center gap-4 p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
-                <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                  <TrendingDown className="w-5 h-5 text-red-600" />
+                <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '50%',
+                    backgroundColor: todayPercentage >= 75 ? '#dcfce7' : '#fef3c7',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto'
+                  }}>
+                    <span style={{
+                      fontSize: '24px',
+                      fontWeight: 700,
+                      color: todayPercentage >= 75 ? '#16a34a' : '#d97706'
+                    }}>
+                      {todayPercentage}%
+                    </span>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="font-semibold text-zinc-900">{lowAttendanceCount} Students</p>
-                  <p className="text-xs text-zinc-500">Need attendance improvement</p>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderTop: '1px solid #e2e8f0' }}>
+                  <span style={{ color: '#64748b', fontSize: '14px' }}>Present</span>
+                  <span style={{ fontWeight: 600, color: '#22c55e' }}>{stats.todayPresent}</span>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-zinc-400" />
-              </Link>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderTop: '1px solid #e2e8f0' }}>
+                  <span style={{ color: '#64748b', fontSize: '14px' }}>Absent</span>
+                  <span style={{ fontWeight: 600, color: '#ef4444' }}>{stats.todayTotal - stats.todayPresent}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderTop: '1px solid #e2e8f0' }}>
+                  <span style={{ color: '#64748b', fontSize: '14px' }}>Total</span>
+                  <span style={{ fontWeight: 600, color: '#1e293b' }}>{stats.todayTotal}</span>
+                </div>
+              </div>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '32px 0' }}>
+                <ClipboardCheck size={40} color="#cbd5e1" style={{ margin: '0 auto 12px' }} />
+                <p style={{ color: '#64748b', marginBottom: '12px' }}>No attendance marked today</p>
+                <Link
+                  to="/attendance"
+                  style={{
+                    color: '#3b82f6',
+                    textDecoration: 'none',
+                    fontWeight: 500,
+                    fontSize: '14px'
+                  }}
+                >
+                  Mark attendance →
+                </Link>
+              </div>
             )}
           </div>
         </div>
