@@ -6,14 +6,10 @@ import { Link } from 'react-router-dom';
 interface Stats {
   totalStudents: number;
   totalCourses: number;
-  todayAttendance: {
-    present: number;
-    absent: number;
-    total: number;
-    percentage: number;
-  };
-  weeklyAverage: number;
-  lowAttendanceCount: number;
+  todayPresent: number;
+  todayTotal: number;
+  avgAttendance: number;
+  lowAttendanceStudents: Array<{ id: number; name: string; percentage: number }>;
 }
 
 export default function Dashboard() {
@@ -24,6 +20,9 @@ export default function Dashboard() {
       return res.data;
     },
   });
+
+  const todayPercentage = stats?.todayTotal ? Math.round((stats.todayPresent / stats.todayTotal) * 100) : 0;
+  const lowAttendanceCount = stats?.lowAttendanceStudents?.length || 0;
 
   return (
     <div className="space-y-8">
@@ -63,20 +62,20 @@ export default function Dashboard() {
             <ArrowUpRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-400" />
           </div>
           <p className="text-2xl font-semibold text-zinc-900">
-            {isLoading ? <span className="inline-block w-12 h-7 bg-zinc-100 rounded animate-pulse" /> : `${stats?.todayAttendance?.percentage || 0}%`}
+            {isLoading ? <span className="inline-block w-12 h-7 bg-zinc-100 rounded animate-pulse" /> : `${todayPercentage}%`}
           </p>
           <p className="text-sm text-zinc-500 mt-0.5">Today's Attendance</p>
         </Link>
 
         <Link to="/reports" className="bg-white rounded-xl p-6 border border-zinc-200 shadow-sm hover:shadow transition-colors group">
           <div className="flex items-center justify-between mb-3">
-            <div className={`w-10 h-10 ${stats?.lowAttendanceCount ? 'bg-red-50' : 'bg-zinc-50'} rounded-lg flex items-center justify-center`}>
-              <TrendingDown className={`w-5 h-5 ${stats?.lowAttendanceCount ? 'text-red-500' : 'text-zinc-400'}`} />
+            <div className={`w-10 h-10 ${lowAttendanceCount ? 'bg-red-50' : 'bg-zinc-50'} rounded-lg flex items-center justify-center`}>
+              <TrendingDown className={`w-5 h-5 ${lowAttendanceCount ? 'text-red-500' : 'text-zinc-400'}`} />
             </div>
             <ArrowUpRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-400" />
           </div>
           <p className="text-2xl font-semibold text-zinc-900">
-            {isLoading ? <span className="inline-block w-12 h-7 bg-zinc-100 rounded animate-pulse" /> : stats?.lowAttendanceCount || 0}
+            {isLoading ? <span className="inline-block w-12 h-7 bg-zinc-100 rounded animate-pulse" /> : lowAttendanceCount}
           </p>
           <p className="text-sm text-zinc-500 mt-0.5">Low Attendance</p>
         </Link>
@@ -109,33 +108,33 @@ export default function Dashboard() {
       <div className="grid md:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl border border-zinc-200 p-7">
           <h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wide mb-4">Today's Attendance</h2>
-          {stats?.todayAttendance?.total ? (
+          {stats?.todayTotal ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between py-3 border-b border-zinc-100">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-500" />
                   <span className="text-sm text-zinc-600">Present</span>
                 </div>
-                <span className="font-semibold text-zinc-900">{stats.todayAttendance.present}</span>
+                <span className="font-semibold text-zinc-900">{stats.todayPresent}</span>
               </div>
               <div className="flex items-center justify-between py-3 border-b border-zinc-100">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-red-500" />
                   <span className="text-sm text-zinc-600">Absent</span>
                 </div>
-                <span className="font-semibold text-zinc-900">{stats.todayAttendance.absent}</span>
+                <span className="font-semibold text-zinc-900">{stats.todayTotal - stats.todayPresent}</span>
               </div>
               <div className="pt-2">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-zinc-600">Attendance Rate</span>
-                  <span className={`text-lg font-semibold ${stats.todayAttendance.percentage >= 75 ? 'text-emerald-600' : 'text-red-600'}`}>
-                    {stats.todayAttendance.percentage}%
+                  <span className={`text-lg font-semibold ${todayPercentage >= 75 ? 'text-emerald-600' : 'text-red-600'}`}>
+                    {todayPercentage}%
                   </span>
                 </div>
                 <div className="w-full bg-zinc-100 rounded-full h-2">
                   <div 
-                    className={`h-2 rounded-full transition-all ${stats.todayAttendance.percentage >= 75 ? 'bg-emerald-500' : 'bg-red-500'}`}
-                    style={{ width: `${stats.todayAttendance.percentage}%` }}
+                    className={`h-2 rounded-full transition-all ${todayPercentage >= 75 ? 'bg-emerald-500' : 'bg-red-500'}`}
+                    style={{ width: `${todayPercentage}%` }}
                   />
                 </div>
               </div>
@@ -172,13 +171,13 @@ export default function Dashboard() {
                 <p className="text-xs text-zinc-500">Active programs</p>
               </div>
             </div>
-            {(stats?.lowAttendanceCount || 0) > 0 && (
+            {lowAttendanceCount > 0 && (
               <Link to="/reports" className="flex items-center gap-4 p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
                 <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
                   <TrendingDown className="w-5 h-5 text-red-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-semibold text-zinc-900">{stats?.lowAttendanceCount} Students</p>
+                  <p className="font-semibold text-zinc-900">{lowAttendanceCount} Students</p>
                   <p className="text-xs text-zinc-500">Need attendance improvement</p>
                 </div>
                 <ArrowUpRight className="w-4 h-4 text-zinc-400" />
